@@ -18,6 +18,18 @@
 
 #include <WebServer_WT32_ETH01.h>
 
+// Set LED_BUILTIN if it is not defined by Arduino framework
+#ifndef LED_BUILTIN
+    #define LED_BUILTIN 2
+#endif
+
+#ifndef INPUT_1
+    #define INPUT_1 14
+#endif
+
+#ifndef INPUT_2
+    #define INPUT_2 15
+#endif
 WiFiServer server(80);
 
 // Select the IP address according to your local network
@@ -32,6 +44,10 @@ int reqCount = 0;                // number of requests received
 
 void setup()
 {
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(INPUT_1, INPUT);
+  pinMode(INPUT_2, INPUT);
+
   Serial.begin(115200);
   while (!Serial);
 
@@ -64,6 +80,12 @@ void loop()
 {
   // listen for incoming clients
   WiFiClient client = server.available();
+  if((digitalRead(INPUT_1)==HIGH) || (digitalRead(INPUT_2)==HIGH)){
+  digitalWrite(LED_BUILTIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_BUILTIN, LOW);
+  delay(1000);
+  }
 
   if (client)
   {
